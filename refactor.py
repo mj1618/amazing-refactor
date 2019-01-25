@@ -26,94 +26,6 @@ def call1200():
     print(":")
   exit()
 
-def call430():
-  global w, v, s, r, c, q, h, z, H, V
-  if r==H or w[r+1][s]!=0:
-    if s!=V:
-      if w[r][s+1]!=0:
-        call940()
-      else:
-        x=int(random.random()*2+1)
-        if x==1:
-          call940()
-        elif x==2:
-          call1090()
-    elif z==1:
-      call940()
-    else:
-      q=1
-      x=int(random.random()*2+1)
-      if x==1:
-        call940()
-      elif x==2:
-        call1090()
-  elif s!=V:
-    if w[r][s+1]!=0:
-      x = random.randint(1,2)
-      if x==1:
-        call940()
-      elif x==2:
-        call1020()
-    else:
-      x = random.randint(1, 3)
-      if x==1:
-        call940()
-      elif x==2:
-        call1020()
-      elif x==3:
-        call1090()
-  elif z==1:
-    x = random.randint(1,2)
-    if x==1:
-      call940()
-    elif x==2:
-      call1020()
-  else:
-    q=1
-    x = random.randint(1, 3)
-    if x==1:
-      call940()
-    elif x==2:
-      call1020()
-    elif x==3:
-      call1090()
-
-def call790():
-  global w, v, s, r, c, q, h, z, H, V
-  if r==H or w[r+1][s]!=0:
-    if s!=V:
-      if w[r][s+1]!=0:
-        call210()
-      else:
-        call1090()
-    elif z==1:
-      call210()
-    else:
-      q=1
-      call1090()
-  elif s!=V:
-    if w[r][s+1]!=0:
-      call1020()
-    else:
-      x=random.randint(1, 2)
-      if x==1:
-        call1020()
-      elif x==2:
-        call1090()
-  elif z==1:
-    call1020()
-  else:
-    q=1
-    c+=1
-    v[r][s-1]=1
-    s-=1
-    if c==H*V+1:
-      call1200()
-    else:
-      q=0
-      call270()
-
-
 def call1020():
   global w, v, s, r, c, q, h, H, V
   w[r+1][s] = c
@@ -171,62 +83,6 @@ def call980():
     q=0
     call270()
 
-def call720():
-  global w, v, s, r, c, q, h, H, V
-  if s!=V:
-    if w[r][s+1]!=0:
-      call980()
-    else:
-      x=random.randint(1, 2)
-      if x==1:
-        call980()
-      elif x==2:
-        call1090()
-  elif z==1:
-    w[r][s-1]=c
-    c+=1
-    v[r][s-1]=1
-    s-=1
-    if c==H*V+1:
-      call1200()
-    else:
-      q=0
-      call270()
-  else:
-    q=1
-    x=random.randint(1,2)
-    if x==1:
-      w[r][s-1]=c
-      c+=1
-      v[r][s-1]=1
-      s-=1
-      if c==H*V+1:
-        call1200()
-      else:
-        q=0
-        call270()
-    elif x==2:
-      call1090()
-
-
-def call680():
-  global w, v, s, r, c, q, h, H, V
-  x=random.randint(1, 3)
-  if x==1:
-    w[r][s-1]=c
-    c+=1
-    v[r][s-1]=1
-    s-=1
-    if c==H*V+1:
-      call1200()
-    else:
-      q=0
-      call270()
-  elif x==2:
-    call1020()
-  else:
-    call1090()
-
 def call600():
   global w, v, s, r, c, q, h, H, V
   if s-1==0 or w[r][s-1]!=0:
@@ -263,7 +119,40 @@ def call600():
         q=0
         call270()
   elif r==H or w[r+1][s]!=0:
-    call720()
+    if s!=V:
+      if w[r][s+1]!=0:
+        call980()
+      else:
+        x=random.randint(1, 2)
+        if x==1:
+          call980()
+        elif x==2:
+          call1090()
+    elif z==1:
+      w[r][s-1]=c
+      c+=1
+      v[r][s-1]=1
+      s-=1
+      if c==H*V+1:
+        call1200()
+      else:
+        q=0
+        call270()
+    else:
+      q=1
+      x=random.randint(1,2)
+      if x==1:
+        w[r][s-1]=c
+        c+=1
+        v[r][s-1]=1
+        s-=1
+        if c==H*V+1:
+          call1200()
+        else:
+          q=0
+          call270()
+      elif x==2:
+        call1090()
   elif s!=V:
     if w[r][s+1]!=0:
       x = random.randint(1, 2)
@@ -280,7 +169,22 @@ def call600():
       elif x==2:
         call1020()
     else:
-      call680()
+      x=random.randint(1, 3)
+      if x==1:
+        w[r][s-1]=c
+        c+=1
+        v[r][s-1]=1
+        s-=1
+        if c==H*V+1:
+          call1200()
+        else:
+          q=0
+          call270()
+      elif x==2:
+        call1020()
+      else:
+        call1090()
+
   elif z==1:
     x = random.randint(1, 2)
     if x==1:
@@ -297,7 +201,21 @@ def call600():
       call1020()
   else:
     q=1
-    call680()
+    x=random.randint(1, 3)
+    if x==1:
+      w[r][s-1]=c
+      c+=1
+      v[r][s-1]=1
+      s-=1
+      if c==H*V+1:
+        call1200()
+      else:
+        q=0
+        call270()
+    elif x==2:
+      call1020()
+    else:
+      call1090()
 
 
 def call270():
@@ -306,10 +224,57 @@ def call270():
     call600()
   elif w[r-1][s]!=0:
     call600()
-  elif s-1==0:
-    call430()
-  elif w[r][s-1]!=0:
-    call430()
+  elif s-1==0 or w[r][s-1]!=0:
+    if r==H or w[r+1][s]!=0:
+      if s!=V:
+        if w[r][s+1]!=0:
+          call940()
+        else:
+          x=int(random.random()*2+1)
+          if x==1:
+            call940()
+          elif x==2:
+            call1090()
+      elif z==1:
+        call940()
+      else:
+        q=1
+        x=int(random.random()*2+1)
+        if x==1:
+          call940()
+        elif x==2:
+          call1090()
+    elif s!=V:
+      if w[r][s+1]!=0:
+        x = random.randint(1,2)
+        if x==1:
+          call940()
+        elif x==2:
+          call1020()
+      else:
+        x = random.randint(1, 3)
+        if x==1:
+          call940()
+        elif x==2:
+          call1020()
+        elif x==3:
+          call1090()
+    elif z==1:
+      x = random.randint(1,2)
+      if x==1:
+        call940()
+      elif x==2:
+        call1020()
+    else:
+      q=1
+      x = random.randint(1, 3)
+      if x==1:
+        call940()
+      elif x==2:
+        call1020()
+      elif x==3:
+        call1090()
+
   elif r==H or w[r+1][s]!=0:
     if s!=V:
       if w[r][s+1]!=0:
