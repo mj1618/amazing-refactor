@@ -220,9 +220,7 @@ def call600():
 
 def call270():
   global w, v, s, r, c, q, h, H, V
-  if r-1==0:
-    call600()
-  elif w[r-1][s]!=0:
+  if r-1==0 or w[r-1][s]!=0:
     call600()
   elif s-1==0 or w[r][s-1]!=0:
     if r==H or w[r+1][s]!=0:
