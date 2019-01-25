@@ -171,31 +171,17 @@ def call980():
     q=0
     call270()
 
-def call1130():
-  global w, v, s, r, c, q, h, H, V
-  s = s+1
-  if c==V*H+1:
-    call1200()
-  else:
-    call270()
-
-def call880():
-  global w, v, s, r, c, q, h, H, V
-  if s!=V:
-    if w[r][s+1]!=0:
-      call210()
-    else:
-      call1090()
-  elif z==1:
-    call210()
-  else:
-    q=1
-    call1090()
-
 def call720():
   global w, v, s, r, c, q, h, H, V
   if s!=V:
-    call750()
+    if w[r][s+1]!=0:
+      call980()
+    else:
+      x=random.randint(1, 2)
+      if x==1:
+        call980()
+      elif x==2:
+        call1090()
   elif z==1:
     w[r][s-1]=c
     c+=1
@@ -326,7 +312,20 @@ def call270():
     call430()
   elif r==H or w[r+1][s]!=0:
     if s!=V:
-      call380()
+      if w[r][s+1]!=0:
+        x = random.randint(1,2)
+        if x==1:
+          call940()
+        elif x==2:
+          call980()
+      else:
+        x=random.randint(1, 3)
+        if x==1:
+          call940()
+        elif x==2:
+          call980()
+        elif x==3:
+          call1090()
     elif z==1:
       x = random.randint(1,2)
       if x==1:
@@ -366,34 +365,6 @@ def call270():
         call270()
     elif x==3:
       call1020()
-
-def call380():
-  global w, v, s, r, c, q, h, H, V
-  if w[r][s+1]!=0:
-    x = random.randint(1,2)
-    if x==1:
-      call940()
-    elif x==2:
-      call980()
-  else:
-    x=random.randint(1, 3)
-    if x==1:
-      call940()
-    elif x==2:
-      call980()
-    elif x==3:
-      call1090()
-
-def call750():
-  global w, v, s, r, c, q, h, H, V
-  if w[r][s+1]!=0:
-    call980()
-  else:
-    x=random.randint(1, 2)
-    if x==1:
-      call980()
-    elif x==2:
-      call1090()
 
 def call210():
   global w, v, s, r, c, q, h, H, V
