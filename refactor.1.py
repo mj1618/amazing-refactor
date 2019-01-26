@@ -8,7 +8,7 @@ w = v = s = r = c = q = h = z = None
 def do_cls():
   sp.call('clear',shell=True)
 
-def draw_maze():
+def call1200():
   global w, v, s, r, c, q, h, H, V
   for j in range(1, V+1):
     print("I", end='')
@@ -26,9 +26,6 @@ def draw_maze():
     print(":")
   exit()
 
-def is_finished(c, H, V):
-  return c==H*V+1
-
 def call1020():
   global w, v, s, r, c, q, h, H, V
   w[r+1][s] = c
@@ -39,8 +36,8 @@ def call1020():
     v[r][s]=3
 
   r+=1
-  if is_finished(c, H, V):
-    draw_maze()
+  if c==H*V+1:
+    call1200()
   else:
     call600()
 
@@ -70,7 +67,7 @@ def call1090():
       v[r][s]=3
     s = s+1
     if c==V*H+1:
-      draw_maze()
+      call1200()
     else:
       call270()
 
@@ -80,17 +77,14 @@ def call980():
   c+=1
   v[r][s-1]=1
   s-=1
-  if is_finished(c, H, V):
-    draw_maze()
+  if c==H*V+1:
+    call1200()
   else:
     q=0
     call270()
 
 def call600():
   global w, v, s, r, c, q, h, H, V
-  if (s-1==0 or w[r][s-1]!=0) and (r==H or w[r+1][s]!=0) and (s!=V) and (w[r][s+1]!=0):
-    call210()
-
   if s-1==0 or w[r][s-1]!=0:
     if r==H or w[r+1][s]!=0:
       if s!=V:
@@ -119,8 +113,8 @@ def call600():
       c+=1
       v[r][s-1]=1
       s-=1
-      if is_finished(c, H, V):
-        draw_maze()
+      if c==H*V+1:
+        call1200()
       else:
         q=0
         call270()
@@ -139,8 +133,8 @@ def call600():
       c+=1
       v[r][s-1]=1
       s-=1
-      if is_finished(c, H, V):
-        draw_maze()
+      if c==H*V+1:
+        call1200()
       else:
         q=0
         call270()
@@ -152,8 +146,8 @@ def call600():
         c+=1
         v[r][s-1]=1
         s-=1
-        if is_finished(c, H, V):
-          draw_maze()
+        if c==H*V+1:
+          call1200()
         else:
           q=0
           call270()
@@ -167,8 +161,8 @@ def call600():
         c+=1
         v[r][s-1]=1
         s-=1
-        if is_finished(c, H, V):
-          draw_maze()
+        if c==H*V+1:
+          call1200()
         else:
           q=0
           call270()
@@ -181,8 +175,8 @@ def call600():
         c+=1
         v[r][s-1]=1
         s-=1
-        if is_finished(c, H, V):
-          draw_maze()
+        if c==H*V+1:
+          call1200()
         else:
           q=0
           call270()
@@ -198,8 +192,8 @@ def call600():
       c+=1
       v[r][s-1]=1
       s-=1
-      if is_finished(c, H, V):
-        draw_maze()
+      if c==H*V+1:
+        call1200()
       else:
         q=0
         call270()
@@ -213,8 +207,8 @@ def call600():
       c+=1
       v[r][s-1]=1
       s-=1
-      if is_finished(c, H, V):
-        draw_maze()
+      if c==H*V+1:
+        call1200()
       else:
         q=0
         call270()
@@ -304,8 +298,8 @@ def call270():
         c+=1
         v[r][s-1]=1
         s-=1
-        if is_finished(c, H, V):
-          draw_maze()
+        if c==H*V+1:
+          call1200()
         else:
           q=0
           call270()
@@ -327,8 +321,8 @@ def call270():
       c+=1
       v[r][s-1]=1
       s-=1
-      if is_finished(c, H, V):
-        draw_maze()
+      if c==H*V+1:
+        call1200()
       else:
         q=0
         call270()
@@ -361,8 +355,8 @@ def call940():
   v[r-1][s]=2
   r-=1
 
-  if is_finished(c, H, V):
-    draw_maze()
+  if c==H*V+1:
+    call1200()
   else:
     q=0
     call270()
