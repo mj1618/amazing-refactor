@@ -5,6 +5,201 @@ import sys
 sys.setrecursionlimit(150000)
 w = v = s = r = c = q = h = z = None
 
+def try_move_down():
+  global w, v, s, r, c, q, h, H, V
+  if q==1:
+    z=1
+    q=0
+    if v[r][s]==0:
+      v[r][s]=1
+      r=1
+      s=1
+      if w[r][s]==0:
+        find_next_cell()
+      else:
+        return
+    else:
+      v[r][s]=3
+      find_next_cell()
+  else:
+    move_down() 
+
+def compute_next():
+  global w, v, s, r, c, q, h, H, V
+  if is_wall_up(w, r, s):
+    if is_wall_right(w, r, s, V):
+      if not is_bottom_most(s, V):
+        if is_wall_down(w, r, s):
+          find_next_cell()
+        else:
+          try_move_down()
+      elif z==1:
+        find_next_cell()
+      else:
+        q=1
+        try_move_down()
+    elif not is_bottom_most(s, V):
+      if is_wall_down(w, r, s):
+        move_right()
+      else:
+        call_random([lambda: move_right(), lambda: try_move_down()])
+    elif z==1:
+      move_right()
+    else:
+      q=1
+      move_up()
+  elif is_wall_right(w, r, s, V):
+    if not is_bottom_most(s, V):
+      if is_wall_down(w, r, s):
+        move_up()
+      else:
+        call_random([lambda: move_up(), lambda: try_move_down()])
+    elif z==1:
+      move_up()
+    else:
+      q=1
+      call_random([lambda: move_up(), lambda: try_move_down()])
+  elif not is_bottom_most(s, V):
+    if is_wall_down(w, r, s):
+      call_random([lambda: move_up(), lambda: move_right()])
+    else:
+      call_random([lambda: move_up(), lambda: move_right(), lambda: try_move_down()])
+
+  elif find_next_cell():
+    call_random([lambda: move_up(), lambda: move_right()])
+  else:
+    q=1
+    call_random([lambda: move_up(), lambda: move_right(), lambda: try_move_down()])
+
+def start_loop( ):
+  global w, v, s, r, c, q, h, H, V
+  while True:
+
+    moves = [1, 0, 0, 0] # left, right, up, down
+
+    if not is_wall_left(w, r, s) and not is_wall_right(w, r, s, V):
+      moves[1] = 1
+
+    if not is_wall_left(w, r, s) and not is_wall_up(w, r, s):
+      moves[2] = 1
+
+
+    if not is_wall_left(w, r, s) and is_wall_up(w, r, s) and not is_bottom_most(s, V) and not is_wall_down(w, r, s):
+      moves[3] = 1
+    if not is_wall_left(w, r, s) and is_wall_up(w, r, s) and is_bottom_most(s, V) and not find_next_cell():
+      moves[3] = 1
+
+    if is_wall_left(w, r, s):
+      compute_next()
+    elif is_wall_up(w, r, s):
+      if is_wall_right(w, r, s, V):
+        if not is_bottom_most(s, V):
+          if is_wall_down(w, r, s):
+            move_left()
+          else:
+            call_random([lambda: move_left(), lambda: try_move_down()])
+        elif find_next_cell():
+          move_left()
+        else:
+          q=1
+          call_random([lambda: move_left(), lambda: try_move_down()])
+      elif not is_bottom_most(s, V):
+        if is_wall_down(w, r, s):
+          call_random([lambda: move_left(), lambda: move_right()])
+        else:
+          call_random([lambda: move_left(), lambda: move_right(), lambda: try_move_down()])
+      elif find_next_cell():
+        call_random([lambda: move_left(), lambda: move_right()])
+      else:
+        q=1
+        call_random([lambda: move_left(), lambda: move_right(), lambda: try_move_down()])
+
+    elif is_wall_right(w, r, s, V):
+      if not is_bottom_most(s, V):
+        if is_wall_down(w, r, s):
+          call_random([lambda: move_left(), lambda: move_up()])
+        else:
+          call_random([lambda: move_left(), lambda: move_up(), lambda: try_move_down()])
+      elif z==1:
+        call_random([lambda: move_left(), lambda: move_up()])
+      else:
+        q=1
+        call_random([lambda: move_left(), lambda: move_up(), lambda: try_move_down()])
+    else:
+      call_random([lambda: move_left(), lambda: move_up(), lambda: move_right()])
+
+def is_wall_left(w, r, s):
+  return r-1==0 or w[r-1][s]!=0
+
+def move_down():
+  global w, v, s, r, c, q, h, H, V
+  w[r][s+1]=c
+  c+=1
+  if v[r][s]==0:
+    v[r][s]=1
+  else:
+    v[r][s]=3
+  s+=1
+  draw_if_finished(c, H, V)
+
+def is_wall_up(w, r, s):
+  return s-1==0 or w[r][s-1]!=0
+
+def is_wall_right(w, r, s, V):
+  return r==H or w[r+1][s]!=0
+
+def is_wall_down(w, r, s):
+  return w[r][s+1]!=0
+
+
+def call_random(ls):
+  x = random.randint(1, len(ls))
+  return ls[x-1]()
+
+def draw_if_finished(c, H, V):
+  global q
+  if is_finished(c, H, V):
+    draw_maze()
+  else:
+    q=0
+
+def is_right_most(r, H):
+  return r==H
+
+def is_bottom_most(s, V):
+  return s==V
+
+def find_next_cell():
+  global w, v, s, r, c, q, h, H, V
+  while True:
+    if not is_right_most(r, H):
+      r+=1
+    elif not is_bottom_most(s, V): # is right_most
+      r = 1
+      s+=1
+    else: # is right_most and is bottom_most
+      r=1
+      s=1
+
+    if w[r][s]!=0:
+      return
+
+def move_up():
+  global w, v, s, r, c, q, h, H, V
+  w[r][s-1]=c
+  c+=1
+  v[r][s-1]=1
+  s-=1
+  draw_if_finished(c, H, V)
+
+def move_left():
+  global w, v, s, r, c, q, h, H, V
+  w[r-1][s]=c
+  c+=1
+  v[r-1][s]=2
+  r-=1
+  draw_if_finished(c, H, V)
+
 def do_cls():
   sp.call('clear',shell=True)
 
@@ -29,7 +224,7 @@ def draw_maze():
 def is_finished(c, H, V):
   return c==H*V+1
 
-def call1020():
+def move_right():
   global w, v, s, r, c, q, h, H, V
   w[r+1][s] = c
   c+=1
@@ -42,330 +237,7 @@ def call1020():
   if is_finished(c, H, V):
     draw_maze()
   else:
-    call600()
-
-def call1090():
-  global w, v, s, r, c, q, h, H, V
-  if q==1:
-    z=1
-    if v[r][s]==0:
-      v[r][s]=1
-      q=0
-      r=1
-      s=1
-      if w[r][s]==0:
-        call210()
-      else:
-        call270()
-    else:
-      v[r][s]=3
-      q=0
-      call210()
-  else:
-    w[r][s+1]=c
-    c+=1
-    if v[r][s]==0:
-      v[r][s]=1
-    else:
-      v[r][s]=3
-    s = s+1
-    if c==V*H+1:
-      draw_maze()
-    else:
-      call270()
-
-def call980():
-  global w, v, s, r, c, q, h, H, V
-  w[r][s-1]=c
-  c+=1
-  v[r][s-1]=1
-  s-=1
-  if is_finished(c, H, V):
-    draw_maze()
-  else:
-    q=0
-    call270()
-
-def call600():
-  global w, v, s, r, c, q, h, H, V
-  if (s-1==0 or w[r][s-1]!=0) and (r==H or w[r+1][s]!=0) and (s!=V) and (w[r][s+1]!=0):
-    call210()
-
-  if s-1==0 or w[r][s-1]!=0:
-    if r==H or w[r+1][s]!=0:
-      if s!=V:
-        if w[r][s+1]!=0:
-          call210()
-        else:
-          call1090()
-      elif z==1:
-        call210()
-      else:
-        q=1
-        call1090()
-    elif s!=V:
-      if w[r][s+1]!=0:
-        call1020()
-      else:
-        x=random.randint(1, 2)
-        if x==1:
-          call1020()
-        elif x==2:
-          call1090()
-    elif z==1:
-      call1020()
-    else:
-      q=1
-      c+=1
-      v[r][s-1]=1
-      s-=1
-      if is_finished(c, H, V):
-        draw_maze()
-      else:
-        q=0
-        call270()
-  elif r==H or w[r+1][s]!=0:
-    if s!=V:
-      if w[r][s+1]!=0:
-        call980()
-      else:
-        x=random.randint(1, 2)
-        if x==1:
-          call980()
-        elif x==2:
-          call1090()
-    elif z==1:
-      w[r][s-1]=c
-      c+=1
-      v[r][s-1]=1
-      s-=1
-      if is_finished(c, H, V):
-        draw_maze()
-      else:
-        q=0
-        call270()
-    else:
-      q=1
-      x=random.randint(1,2)
-      if x==1:
-        w[r][s-1]=c
-        c+=1
-        v[r][s-1]=1
-        s-=1
-        if is_finished(c, H, V):
-          draw_maze()
-        else:
-          q=0
-          call270()
-      elif x==2:
-        call1090()
-  elif s!=V:
-    if w[r][s+1]!=0:
-      x = random.randint(1, 2)
-      if x==1:
-        w[r][s-1]=c
-        c+=1
-        v[r][s-1]=1
-        s-=1
-        if is_finished(c, H, V):
-          draw_maze()
-        else:
-          q=0
-          call270()
-      elif x==2:
-        call1020()
-    else:
-      x=random.randint(1, 3)
-      if x==1:
-        w[r][s-1]=c
-        c+=1
-        v[r][s-1]=1
-        s-=1
-        if is_finished(c, H, V):
-          draw_maze()
-        else:
-          q=0
-          call270()
-      elif x==2:
-        call1020()
-      else:
-        call1090()
-
-  elif z==1:
-    x = random.randint(1, 2)
-    if x==1:
-      w[r][s-1]=c
-      c+=1
-      v[r][s-1]=1
-      s-=1
-      if is_finished(c, H, V):
-        draw_maze()
-      else:
-        q=0
-        call270()
-    elif x==2:
-      call1020()
-  else:
-    q=1
-    x=random.randint(1, 3)
-    if x==1:
-      w[r][s-1]=c
-      c+=1
-      v[r][s-1]=1
-      s-=1
-      if is_finished(c, H, V):
-        draw_maze()
-      else:
-        q=0
-        call270()
-    elif x==2:
-      call1020()
-    else:
-      call1090()
-
-
-def call270():
-  global w, v, s, r, c, q, h, H, V
-  if r-1==0 or w[r-1][s]!=0:
-    call600()
-  elif s-1==0 or w[r][s-1]!=0:
-    if r==H or w[r+1][s]!=0:
-      if s!=V:
-        if w[r][s+1]!=0:
-          call940()
-        else:
-          x=int(random.random()*2+1)
-          if x==1:
-            call940()
-          elif x==2:
-            call1090()
-      elif z==1:
-        call940()
-      else:
-        q=1
-        x=int(random.random()*2+1)
-        if x==1:
-          call940()
-        elif x==2:
-          call1090()
-    elif s!=V:
-      if w[r][s+1]!=0:
-        x = random.randint(1,2)
-        if x==1:
-          call940()
-        elif x==2:
-          call1020()
-      else:
-        x = random.randint(1, 3)
-        if x==1:
-          call940()
-        elif x==2:
-          call1020()
-        elif x==3:
-          call1090()
-    elif z==1:
-      x = random.randint(1,2)
-      if x==1:
-        call940()
-      elif x==2:
-        call1020()
-    else:
-      q=1
-      x = random.randint(1, 3)
-      if x==1:
-        call940()
-      elif x==2:
-        call1020()
-      elif x==3:
-        call1090()
-
-  elif r==H or w[r+1][s]!=0:
-    if s!=V:
-      if w[r][s+1]!=0:
-        x = random.randint(1,2)
-        if x==1:
-          call940()
-        elif x==2:
-          call980()
-      else:
-        x=random.randint(1, 3)
-        if x==1:
-          call940()
-        elif x==2:
-          call980()
-        elif x==3:
-          call1090()
-    elif z==1:
-      x = random.randint(1,2)
-      if x==1:
-        call940()
-      elif x==2:
-        w[r][s-1]=c
-        c+=1
-        v[r][s-1]=1
-        s-=1
-        if is_finished(c, H, V):
-          draw_maze()
-        else:
-          q=0
-          call270()
-    else:
-      q=1
-      x=random.randint(1, 3)
-      if x==1:
-        call940()
-      elif x==2:
-        call980()
-      elif x==3:
-        call1090()
-  else:
-    x = random.randint(1, 3)
-    if x==1:
-      call940()
-    elif x==2:
-      w[r][s-1]=c
-      c+=1
-      v[r][s-1]=1
-      s-=1
-      if is_finished(c, H, V):
-        draw_maze()
-      else:
-        q=0
-        call270()
-    elif x==3:
-      call1020()
-
-def call210():
-  global w, v, s, r, c, q, h, H, V
-  if r!=H:
-    r+=1
-    if w[r][s]==0:
-      call210()
-    else:
-      call270()
-  elif s!=V:
-    r = 1
-    s+=1
-  else:
-    r=1
-    s=1
-  if w[r][s]==0:
-    call210()
-  else:
-    call270()
-
-def call940():
-  global w, v, s, r, c, q, h, H, V
-  w[r-1][s]=c
-  c=c+1
-  v[r-1][s]=2
-  r-=1
-
-  if is_finished(c, H, V):
-    draw_maze()
-  else:
-    q=0
-    call270()
+    compute_next()
 
 def main():
   global w, v, s, r, c, q, h, H, V
@@ -402,7 +274,7 @@ def main():
   c += 1
   r = x
   s=1
-  call270()
+  start_loop()
 
 main()
 
